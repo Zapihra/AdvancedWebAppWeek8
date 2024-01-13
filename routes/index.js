@@ -1,7 +1,9 @@
+require('dotenv').config();
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var bcrypt = require('bcryptjs')
+var jwt = require('jsonwebtoken')
 
 const userSchema = new mongoose.Schema({
   email: {type: String},
@@ -33,6 +35,29 @@ router.post('/api/user/register', function(req, res) {
       res.send("ok")
     }
   })
-
 })
+
+router.post('/api/user/login', function(req, res) {
+  User.findOne({email: req.body.email}, (err, user) =>{
+    if(!user) {
+      return res.status(403).send("No such email")
+    }
+    else {
+      bcrypt.compare(req.body.password, user.password, (err, match) => {
+        if(err) throw err;
+        if (match) {
+          var token = jwt.sign(
+            { //payload
+              email: user.email,
+            },
+            process.env.SECRET
+
+          )
+          return res.json({"success":true, "token": token})
+        }
+      })
+    }
+  })
+})
+
 module.exports = router;
