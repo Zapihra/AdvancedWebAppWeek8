@@ -19,7 +19,7 @@ const todoSchema = new mongoose.Schema({
   user: {type: Object},
   items: {type: Array}
 });
-const Item = mongoose.model('Items', todoSchema)
+const Item = mongoose.model('Todo', todoSchema)
 
 var opts = {
   secretOrKey: process.env.SECRET,
