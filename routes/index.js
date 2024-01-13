@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.post('/api/user/register/', function(req, res) {
+router.post('/api/user/register', function(req, res) {
   const mail = req.body.email;
   const pw = req.body.password;
 
