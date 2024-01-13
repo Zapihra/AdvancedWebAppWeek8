@@ -4,12 +4,32 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var bcrypt = require('bcryptjs')
 var jwt = require('jsonwebtoken')
+var passport = require('passport')
+var JwtStrategy = require('passport-jwt').Strategy;
+var ExtractJwt = require('passport-jwt').ExtractJwt;
 
 const userSchema = new mongoose.Schema({
   email: {type: String},
   password: {type: String}
 });
 const User = mongoose.model('Users', userSchema)
+
+var opts = {
+  secretOrKey: process.env.SECRET,
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
+}
+
+passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
+  User.findOne({id: jwt_payload.sub}, function(err, user){
+    if (err) {
+      return done(err, false);
+    }
+    if (user) {
+      return done(null, user);
+    }
+    else {return done(null, false);}
+  })
+}));
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -51,13 +71,16 @@ router.post('/api/user/login', function(req, res) {
               email: user.email,
             },
             process.env.SECRET
-
           )
           return res.json({"success":true, "token": token})
         }
       })
     }
   })
+})
+
+router.get('/api/private', passport.authenticate('jwt', {session: false}), (req,res) => {
+  res.json({"email": req.user.email})
 })
 
 module.exports = router;
