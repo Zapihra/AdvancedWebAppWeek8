@@ -7,6 +7,7 @@ var jwt = require('jsonwebtoken')
 var passport = require('passport')
 var JwtStrategy = require('passport-jwt').Strategy;
 var ExtractJwt = require('passport-jwt').ExtractJwt;
+var { body, validationResult } = require('express-validator');
 
 const userSchema = new mongoose.Schema({
   email: {type: String},
@@ -36,7 +37,16 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.post('/api/user/register', function(req, res) {
+router.post('/api/user/register', 
+  body("email").trim().isEmail(), 
+  body("password").not().isLowercase().matches(/^(?=.*\d)(?=.*[a-z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$/, "i"),
+
+function(req, res) {
+  const errors = validationResult(req);
+  if(!errors.isEmpty()){
+    return res.status(400).json({"errors": errors.array()})
+  }
+
   const mail = req.body.email;
   const pw = req.body.password;
 
