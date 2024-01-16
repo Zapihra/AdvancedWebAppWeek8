@@ -42,20 +42,20 @@ passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
+
 //handles the registeration of the user
-router.post('/api/user/register', 
-  body("email").trim().isEmail(), 
+router.post('/api/user/register',
+  body("email").trim().isEmail(),
   body("password").not().isLowercase().matches(/^(?=.*\d)(?=.*[a-z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$/, "i"),
 
 function(req, res) {
-  const errors = validationResult(req);
+  const errors = validationResult(req);  
   if(!errors.isEmpty()){
     return res.status(400).json({"errors": errors.array()})
   }
-
+  
   const mail = req.body.email;
   const pw = req.body.password;
-  console.log(pw)
 
   User.findOne({email: mail}, (err, user) => {
     if(user) {
@@ -69,7 +69,7 @@ function(req, res) {
         password: hash
       });
       us.save()
-      res.send("ok")
+      res.json({"res": "ok"})
     }
   })
 })
