@@ -27,7 +27,8 @@ var opts = {
 }
 
 passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-  User.findOne({id: jwt_payload.sub}, function(err, user){
+  console.log(jwt_payload)
+  User.findOne({email: jwt_payload.email}, function(err, user){
     if (err) {
       return done(err, false);
     }
