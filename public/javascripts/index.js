@@ -1,5 +1,4 @@
 window.onload = function() {
-    var button = document.getElementById("logout")
 
     fetch('http://localhost:3000/api/private', {
         headers: {
@@ -10,26 +9,42 @@ window.onload = function() {
             return undefined}
         else {return response.json()}})
     .then(function (res) {
+        var body = document.getElementById("body")
+        
         if(res == undefined) {
-            document.getElementById("logout").style.visibility= "hidden";
-            document.getElementById("email").style.visibility = "hidden"
-            document.getElementById('reg').style.visibility = "visible";
-            document.getElementById('login').style.visibility = "visible";
+            const a1 = document.createElement("a")
+            const a2 = document.createElement("a")
+            a1.innerHTML = "register <br>"
+            a2.innerHTML = "login"
+            a1.href ="/register.html"
+            a2.href ="/login.html"
+            a1.id = "reg"
+            a2.id = "login"
+            body.appendChild(a1)
+            body.appendChild(a2)
+            body.removeChild(document.getElementById("logout"))
+            body.removeChild(document.getElementById("email"))
         }
         else {
-            var email = document.getElementById("email")
-            email.textContent = res.email
-            document.getElementById("logout").style.visibility = "visible";
-            email.style.visibility = "visible";
-            document.getElementById('reg').style.visibility = "hidden";
-            document.getElementById('login').style.visibility = "hidden";
+            const p = document.createElement("p")
+            const button = document.createElement("button")
+            p.innerHTML = res.email
+            button.innerHTML = "logout"
+            p.id = "email"
+            button.id = "logout"
+            body.appendChild(p)
+            body.appendChild(button)
+            body.removeChild(document.getElementById("reg"))
+            body.removeChild(document.getElementById("login"))
     
         }
     })
-    
-    button.addEventListener("click", function() {
-        localStorage.removeItem('auth_token')
-        location.reload()
+     
+    document.addEventListener("click", function(e) {
+        if (e.target.id == "logout") {
+            localStorage.removeItem('auth_token')
+            location.reload()
+        }
     })
 
 
