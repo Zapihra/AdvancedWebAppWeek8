@@ -19,7 +19,7 @@ const todoSchema = new mongoose.Schema({
   user: {type: Object},
   items: {type: Array}
 });
-const Item = mongoose.model('Todo', todoSchema)
+const Item = mongoose.model('Todos', todoSchema)
 
 var opts = {
   secretOrKey: process.env.SECRET,
@@ -99,13 +99,23 @@ router.post('/api/user/login', function(req, res) {
 })
 //only visible if user is authenticated
 router.get('/api/private', passport.authenticate('jwt', {session: false}), (req,res) => {
-  res.json({"email": req.user.email})
+
+  Item.findOne({user: req.user._id}, (err, item) =>{
+  //  console.log("here")
+    if(!item){
+      return res.json({"email": req.user.email, "todos": "none"})
+    }
+    else {
+      return res.json({"email": req.user.email, "todos": item.items})
+    }
+  })
 })
+
+
 //only visible if user is authenticated, either creates new list of adds to the old one
 router.post('/api/todos', passport.authenticate('jwt', {session: false}), (req,res) => {
   Item.findOne({user: req.user._id}, (err, item) => {
     if(!item){
-
       const im = new Item ({
         user: req.user._id,
         items: req.body.items
@@ -115,9 +125,7 @@ router.post('/api/todos', passport.authenticate('jwt', {session: false}), (req,r
     else {
       var list = req.body.items;
       
-      for (let i = 0; i < list.length; i++) {
-        item.items.push(list[i]) 
-      }
+      item.items.push(list) 
       item.save();
       
     }
