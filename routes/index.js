@@ -27,7 +27,6 @@ var opts = {
 }
 
 passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-  console.log(jwt_payload)
   User.findOne({email: jwt_payload.email}, function(err, user){
     if (err) {
       return done(err, false);
@@ -81,7 +80,6 @@ router.post('/api/user/login', function(req, res) {
       return res.status(403).json({'msg': "No such email"})
     }
     else {
-      console.log(req.body.password)
       bcrypt.compare(req.body.password, user.password, (err, match) => {
         if(err) throw err;
         if (match) {
