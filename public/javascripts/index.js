@@ -37,10 +37,10 @@ window.onload = function() {
             body.appendChild(button)
             body.appendChild(document.createElement("br"))
             body.appendChild(text)
-            
-            if(res.todos === undefined) {
-                for (let i = 0; i < res.todos.length; i++) {
-                    const text = document.createTextNode(res.todos[i])
+            if(res.todos !== "none") {
+                const todos = JSON.parse(res.todos)
+                for (let i = 0; i < todos.length; i++) {
+                    const text = document.createTextNode(todos[i])
                     body.appendChild(document.createElement("br"))
                     body.appendChild(text)
                 }
@@ -54,6 +54,7 @@ window.onload = function() {
             location.reload()
         }
     })
+
     document.addEventListener("keypress", function (e) {
         if (e.key === "Enter") {
             var todo = document.getElementById("add-item").value
@@ -67,7 +68,7 @@ window.onload = function() {
                 body: JSON.stringify({
                     "items": todo
                 })
-            }).then(function (response){console.log(response)})
+            })
         }
 
     })

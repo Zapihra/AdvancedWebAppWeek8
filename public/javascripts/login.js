@@ -22,7 +22,9 @@ window.onload = function() {
                 window.location.replace('http://localhost:3000/')
             }
             else {
-                console.log("something went wrong")
+                
+                var body = document.getElementById("body")
+                body.appendChild(document.createTextNode("Invalid credentials"))
             }
         })
 

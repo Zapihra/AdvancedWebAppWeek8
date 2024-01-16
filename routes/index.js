@@ -106,7 +106,7 @@ router.get('/api/private', passport.authenticate('jwt', {session: false}), (req,
       return res.json({"email": req.user.email, "todos": "none"})
     }
     else {
-      return res.json({"email": req.user.email, "todos": item.items})
+      return res.json({"email": req.user.email, "todos": JSON.stringify(item.items)})
     }
   })
 })
