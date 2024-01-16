@@ -22,8 +22,6 @@ window.onload = function() {
             a2.id = "login"
             body.appendChild(a1)
             body.appendChild(a2)
-            body.removeChild(document.getElementById("logout"))
-            body.removeChild(document.getElementById("email"))
         }
         else {
             const p = document.createElement("p")
@@ -34,9 +32,7 @@ window.onload = function() {
             button.id = "logout"
             body.appendChild(p)
             body.appendChild(button)
-            body.removeChild(document.getElementById("reg"))
-            body.removeChild(document.getElementById("login"))
-    
+            
         }
     })
      
