@@ -77,7 +77,7 @@ function(req, res) {
 router.post('/api/user/login', function(req, res) {
   User.findOne({email: req.body.email}, (err, user) =>{
     if(!user) {
-      return res.status(403).send("No such email")
+      return res.status(403).json({'msg': "No such email"})
     }
     else {
       console.log(req.body.password)
@@ -92,7 +92,7 @@ router.post('/api/user/login', function(req, res) {
           )
           return res.json({"success":true, "token": token})
         } else {
-          return res.status(403).send("wrong password")
+          return res.status(403).json({"msg": "wrong password"})
         }
       })
     }
