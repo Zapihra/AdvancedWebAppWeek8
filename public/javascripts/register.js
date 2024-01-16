@@ -19,6 +19,14 @@ window.onload = function() {
             if (res.res == "ok"){
                 window.location.replace('http://localhost:3000/login.html')
             }
+            else if (res.errors) {
+                var body = document.getElementById("body")
+                body.appendChild(document.createTextNode("Password is not strong enough"))
+            }
+            else if (res.email) {
+                var body = document.getElementById("body")
+                body.appendChild(document.createTextNode("Email already in use"))
+            }
         })
 
     })
